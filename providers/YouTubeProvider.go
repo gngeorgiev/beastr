@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	API_KEY = ""
+	API_KEY = "AIzaSyDAfuetiKu8_xPk7TDmO5NlnYdkMoip8Tg"
 )
 
 type YouTubeProvider struct {
