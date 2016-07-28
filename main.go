@@ -59,7 +59,7 @@ func main() {
 				go func(p providers.Provider) {
 					res, err := p.Search(q)
 					if err != nil {
-						result[p.GetName()] = err
+						result[p.GetName()] = err.Error()
 					} else {
 						result[p.GetName()] = res
 					}
