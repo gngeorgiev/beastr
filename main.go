@@ -6,6 +6,7 @@ import (
 	"beatster-server/providers"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 
 	"sync"
 
@@ -15,19 +16,26 @@ import (
 )
 
 const (
-	PARAM_QUERY    = "q"
-	PARAM_ID       = "id"
-	PARAM_PROVIDER = "provider"
+	ParamQuery    = "q"
+	ParamId       = "id"
+	ParamProvider = "provider"
 )
 
+func initConfig() {
+	viper.SetDefault("redis_address", "localhost:6379")
+	viper.BindEnv("redis_address")
+}
+
 func main() {
+	initConfig()
+
 	r := gin.Default()
 
 	player := r.Group("/player")
 	{
 		player.GET("/resolve", func(c *gin.Context) {
-			id := c.Query(PARAM_ID)
-			provider := strings.ToLower(c.Query(PARAM_PROVIDER))
+			id := c.Query(ParamId)
+			provider := strings.ToLower(c.Query(ParamProvider))
 
 			registeredProviders := providers.GetProviders()
 			for _, p := range registeredProviders {
@@ -49,7 +57,7 @@ func main() {
 		})
 
 		player.GET("/search", func(c *gin.Context) {
-			q := c.Query(PARAM_QUERY)
+			q := c.Query(ParamQuery)
 			registeredProviders := providers.GetProviders()
 			result := map[string]interface{}{}
 

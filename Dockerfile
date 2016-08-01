@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM centurylink/ca-certs
 
 RUN mkdir /app
 ADD dist/server /app/server

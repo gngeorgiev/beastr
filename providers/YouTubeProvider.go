@@ -1,6 +1,7 @@
 package providers
 
 import (
+	"log"
 	"net/http"
 
 	"beatster-server/models"
@@ -8,9 +9,14 @@ import (
 	"fmt"
 	"sync"
 
+	"beatster-server/clients"
+
 	"github.com/otium/ytdl"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
+
+	"encoding/json"
+	"time"
 )
 
 const (
@@ -56,6 +62,20 @@ func (y *YouTubeProvider) getSpecificResults(kind string, items []*youtube.Searc
 }
 
 func (y *YouTubeProvider) Search(q string) ([]models.Track, error) {
+	redisClient := clients.GetRedisClient()
+	cachedSearch, err := redisClient.Get(q).Result()
+	if err == nil && cachedSearch != "" {
+		var res []models.Track
+		jsonErr := json.Unmarshal([]byte(cachedSearch), &res)
+		if jsonErr != nil {
+			return nil, jsonErr
+		}
+
+		return res, nil
+	} else if err != nil {
+		log.Println(err)
+	}
+
 	call := y.service.Search.List("id,snippet").Q(q).MaxResults(25)
 	r, err := call.Do()
 	if err != nil {
@@ -78,6 +98,14 @@ func (y *YouTubeProvider) Search(q string) ([]models.Track, error) {
 
 		results[i] = track
 	}
+
+	b, err := json.Marshal(results)
+	if err != nil {
+		return nil, err
+	}
+
+	err = redisClient.Set(q, string(b), time.Duration(24)*time.Hour).Err()
+	log.Println(err)
 
 	return results, nil
 }
