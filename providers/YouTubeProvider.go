@@ -149,7 +149,7 @@ func (y *YouTubeProvider) getNextVideo(id string) (string, error) {
 		}
 	}
 
-	return "", errors.New("Not found next video.")
+	return res.Items[0].Id.VideoId, nil //we cannot find the next video, but lets still play one
 }
 
 func (y *YouTubeProvider) Resolve(id string) (models.Track, error) {
