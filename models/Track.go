@@ -6,4 +6,6 @@ type Track struct {
 	Title     string `json:"title"`
 	Provider  string `json:"provider"`
 	StreamUrl string `json:"streamUrl"`
+	Next      string `json:"next"`
+	Previous  string `json:"previous"`
 }

@@ -1,22 +1,19 @@
 package providers
 
 import (
-	"log"
 	"net/http"
 
 	"beatster-server/models"
 
 	"fmt"
+
 	"sync"
 
-	"beatster-server/clients"
+	"errors"
 
 	"github.com/otium/ytdl"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
-
-	"encoding/json"
-	"time"
 )
 
 const (
@@ -62,20 +59,6 @@ func (y *YouTubeProvider) getSpecificResults(kind string, items []*youtube.Searc
 }
 
 func (y *YouTubeProvider) Search(q string) ([]models.Track, error) {
-	redisClient := clients.GetRedisClient()
-	cachedSearch, err := redisClient.Get(q).Result()
-	if err == nil && cachedSearch != "" {
-		var res []models.Track
-		jsonErr := json.Unmarshal([]byte(cachedSearch), &res)
-		if jsonErr != nil {
-			return nil, jsonErr
-		}
-
-		return res, nil
-	} else if err != nil {
-		log.Println(err)
-	}
-
 	call := y.service.Search.List("id,snippet").Q(q).MaxResults(25)
 	r, err := call.Do()
 	if err != nil {
@@ -89,23 +72,21 @@ func (y *YouTubeProvider) Search(q string) ([]models.Track, error) {
 			continue
 		}
 
-		track := models.Track{
+		track := &models.Track{
 			Id:        item.Id.VideoId,
 			Provider:  y.GetName(),
 			Thumbnail: y.getThumbnailUrl(item.Snippet.Thumbnails),
 			Title:     item.Snippet.Title,
 		}
 
-		results[i] = track
-	}
+		if i < len(videos)-1 {
+			track.Next = videos[i+1].Id.VideoId
+		} else {
+			track.Next = videos[0].Id.VideoId
+		}
 
-	b, err := json.Marshal(results)
-	if err != nil {
-		return nil, err
+		results[i] = *track
 	}
-
-	err = redisClient.Set(q, string(b), time.Duration(24)*time.Hour).Err()
-	log.Println(err)
 
 	return results, nil
 }
@@ -121,7 +102,9 @@ func (y *YouTubeProvider) getVideoInfo(id string) (video *youtube.Video, err err
 		err = callError
 	}
 
-	video = r.Items[0]
+	if r != nil && len(r.Items) > 0 {
+		video = r.Items[0]
+	}
 
 	return
 }
@@ -154,26 +137,66 @@ func (y *YouTubeProvider) getStreamUrl(id string) (string, error) {
 	return downloadUrl.String(), nil
 }
 
+func (y *YouTubeProvider) getNextVideo(id string) (string, error) {
+	res, err := y.GetService().Search.List("id").Type("video").RelatedToVideoId(id).Do()
+	if err != nil {
+		return "", err
+	}
+
+	for _, item := range res.Items {
+		if item.Id.VideoId != id {
+			return item.Id.VideoId, nil
+		}
+	}
+
+	return "", errors.New("Not found next video.")
+}
+
 func (y *YouTubeProvider) Resolve(id string) (models.Track, error) {
 	wg := sync.WaitGroup{}
-	wg.Add(2)
-	var err error
+	wg.Add(3)
+	errs := make([]error, 0)
 
+	//TODO: cache these calls
 	var video *youtube.Video
 	go func() {
-		video, err = y.getVideoInfo(id)
-		wg.Done()
+		defer wg.Done()
+
+		youtubeVideo, err := y.getVideoInfo(id)
+		if err != nil {
+			errs = append(errs, err)
+		} else {
+			video = youtubeVideo
+		}
 	}()
 
 	var streamUrl string
 	go func() {
-		streamUrl, err = y.getStreamUrl(id)
-		wg.Done()
+		defer wg.Done()
+
+		url, err := y.getStreamUrl(id)
+		if err != nil {
+			errs = append(errs, err)
+		} else {
+			streamUrl = url
+		}
+	}()
+
+	var nextVideo string
+	go func() {
+		defer wg.Done()
+
+		next, err := y.getNextVideo(id)
+		if err != nil {
+			errs = append(errs, err)
+		} else {
+			nextVideo = next
+		}
 	}()
 
 	wg.Wait()
-	if err != nil {
-		return models.Track{}, err
+	if len(errs) > 0 {
+		return models.Track{}, errors.New(fmt.Sprintf("%s", errs))
 	}
 
 	return models.Track{
@@ -182,8 +205,8 @@ func (y *YouTubeProvider) Resolve(id string) (models.Track, error) {
 		StreamUrl: streamUrl,
 		Thumbnail: y.getThumbnailUrl(video.Snippet.Thumbnails),
 		Title:     video.Snippet.Title,
+		Next:      nextVideo,
 	}, nil
-
 }
 
 func init() {
