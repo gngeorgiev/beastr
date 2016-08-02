@@ -1,8 +1,7 @@
 FROM centurylink/ca-certs
 
-RUN mkdir /app
-ADD dist/server /app/server
+ADD ./dist/server /server
 
 EXPOSE 8085
 
-CMD ["/app/server"]
+CMD ["/server"]
