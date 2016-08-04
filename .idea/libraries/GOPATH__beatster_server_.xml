@@ -1,17 +1,16 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;beatster-server&gt;">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gngeorgeiv" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/github.com" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gopkg.in" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/google.golang.org" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/golang.org" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gngeorgiev" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/rsc.io" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/beatster-server" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/9fans.net" />
+      <root url="file://$PROJECT_DIR$/../gngeorgeiv" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../google.golang.org" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../gngeorgiev" />
+      <root url="file://$PROJECT_DIR$/../rsc.io" />
+      <root url="file://$PROJECT_DIR$/../9fans.net" />
       <root url="file:///usr/local/go/src/container" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
       <root url="file:///usr/local/go/src/mime" />
       <root url="file:///usr/local/go/src/path" />
       <root url="file:///usr/local/go/src/fmt" />
@@ -56,17 +55,16 @@
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gngeorgeiv" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/github.com" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gopkg.in" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/google.golang.org" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/golang.org" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/gngeorgiev" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/rsc.io" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/beatster-server" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/9fans.net" />
+      <root url="file://$PROJECT_DIR$/../gngeorgeiv" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../google.golang.org" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../gngeorgiev" />
+      <root url="file://$PROJECT_DIR$/../rsc.io" />
+      <root url="file://$PROJECT_DIR$/../9fans.net" />
       <root url="file:///usr/local/go/src/container" />
-      <root url="file://$PROJECT_DIR$/../../../../../../gngeorgiev/go/src/sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../sourcegraph.com" />
       <root url="file:///usr/local/go/src/mime" />
       <root url="file:///usr/local/go/src/path" />
       <root url="file:///usr/local/go/src/fmt" />
