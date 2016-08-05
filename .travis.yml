@@ -7,8 +7,8 @@ services:
   - docker
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install sshpass
+  - openssl aes-256-cbc -K $encrypted_2b2e08056ede_key -iv $encrypted_2b2e08056ede_iv
+    -in id_rsa.enc -out id_rsa -d
   - go get github.com/Masterminds/glide
   - glide install
 
@@ -18,4 +18,4 @@ script:
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - make push-docker
-  - sshpass -p="$SSH_PASSWORD" ssh $USER@$HOSTNAME -c "docker service rm server && docker service start server -p 80:8085 gngeorgiev/beatster-server"
+  - ssh -i id_rsa $USER@$HOSTNAME "docker service update --image gngeorgiev/beatster-server:latest server"

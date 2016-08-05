@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gngeorgiev/beatstr-server/controllers"
 	"github.com/spf13/viper"
+	"net/http"
+	"fmt"
 )
 
 func initConfig() {
@@ -13,12 +15,24 @@ func initConfig() {
 	viper.BindEnv("redis_address")
 }
 
+var version string
+
 func main() {
+	if version == "" {
+		version = "development"
+	}
+
 	initConfig()
 
 	r := gin.Default()
 
 	r.Use(controllers.GetMiddleware()...)
+
+	r.GET("/status", func (c *gin.Context) {
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"version": version,
+		})
+	})
 
 	playerController := controllers.PlayerController
 	player := r.Group(playerController.GetPrefix())
@@ -34,6 +48,8 @@ func main() {
 		autocomplete.Use(autocompleteController.GetMiddleware()...)
 		autocomplete.GET("/complete", autocompleteController.AutocompleteRouteHandler())
 	}
+
+	log.Println(fmt.Sprintf("Server version: \"%s\"", version))
 
 	log.Fatal(r.Run(":8085"))
 }

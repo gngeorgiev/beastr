@@ -1,8 +1,12 @@
-build-docker:
+VERSION=$(shell git rev-parse --short HEAD)
+
+build:
 	rm -rf dist/*
 	mkdir -p dist
-	CGO_ENABLED=0 go build -a -x -o ./dist/server ./main.go
-	docker build -t gngeorgiev/beatster-server .
+	CGO_ENABLED=0 go build -ldflags "-X main.version=$(VERSION)" -a -x -o ./dist/server ./main.go
+
+build-docker: build
+	docker build -t gngeorgiev/beatster-server:latest .
 
 push-docker: build-docker
-	docker push gngeorgiev/beatster-server
+	docker push gngeorgiev/beatster-server:latest
