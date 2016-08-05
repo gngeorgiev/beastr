@@ -7,6 +7,10 @@ services:
   - docker
 
 before_install:
+  - apt-get update
+  - apt-get install sshpass
+
+before_script:
   - curl https://glide.sh/get | sh
   - glide install
 
@@ -16,3 +20,4 @@ script:
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - make push-docker
+  - sshpass -p="$SSH_PASSWORD" ssh $USER@$HOSTNAME -c "docker service rm server && docker service start server -p 8085:80 gngeorgiev/beatster-server"
