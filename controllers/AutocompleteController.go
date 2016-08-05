@@ -50,8 +50,6 @@ func (a *autocompleteController) autocomplete(query string) ([]interface{}, erro
 		return nil, err
 	}
 
-	log.Println("Autocomplete: " + string(body))
-
 	var autocompleteData []interface{}
 	jsonErr := json.Unmarshal(body, &autocompleteData)
 	if jsonErr != nil {
