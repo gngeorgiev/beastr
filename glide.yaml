@@ -1,0 +1,13 @@
+package: beatster-server
+import:
+- package: github.com/gin-gonic/gin
+- package: github.com/go-errors/errors
+- package: github.com/otium/ytdl
+- package: github.com/spf13/viper
+- package: google.golang.org/api
+  subpackages:
+  - googleapi/transport
+  - youtube/v3
+- package: gopkg.in/redis.v4
+testImport:
+- package: github.com/franela/goblin
