@@ -9,6 +9,7 @@ services:
 before_install:
   - openssl aes-256-cbc -K $encrypted_2b2e08056ede_key -iv $encrypted_2b2e08056ede_iv
     -in id_rsa.enc -out id_rsa -d
+  - sudo chmod 400 id_rsa
   - go get github.com/Masterminds/glide
   - glide install
 
