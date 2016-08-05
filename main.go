@@ -25,15 +25,15 @@ func main() {
 	player := r.Group(playerController.GetPrefix())
 	{
 		player.Use(playerController.GetMiddleware()...)
-		player.GET("/resolve", playerController.Resolve())
-		player.GET("/search", playerController.Search())
+		player.GET("/resolve", playerController.ResolveRouteHandler())
+		player.GET("/search", playerController.SearchRouteHandler())
 	}
 
 	autocompleteController := controllers.AutocompleteController
 	autocomplete := r.Group(autocompleteController.GetPrefix())
 	{
 		autocomplete.Use(autocompleteController.GetMiddleware()...)
-		autocomplete.GET("/complete", autocompleteController.Autocomplete())
+		autocomplete.GET("/complete", autocompleteController.AutocompleteRouteHandler())
 	}
 
 	log.Fatal(r.Run(":8085"))
