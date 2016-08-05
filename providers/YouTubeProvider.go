@@ -3,14 +3,13 @@ package providers
 import (
 	"net/http"
 
-	"beatster-server/models"
-
 	"fmt"
 
 	"sync"
 
 	"errors"
 
+	"github.com/gngeorgiev/beatstr-server/models"
 	"github.com/otium/ytdl"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"

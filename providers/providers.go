@@ -1,8 +1,9 @@
 package providers
 
 import (
-	"beatster-server/models"
 	"errors"
+
+	"github.com/gngeorgiev/beatstr-server/models"
 )
 
 type Provider interface {

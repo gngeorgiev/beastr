@@ -5,14 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"beatster-server/providers"
 	"time"
 
 	"sync"
 
-	"beatster-server/models"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gngeorgiev/beatstr-server/models"
+	"github.com/gngeorgiev/beatstr-server/providers"
 	"github.com/go-errors/errors"
 )
 

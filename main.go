@@ -3,9 +3,8 @@ package main
 import (
 	"log"
 
-	"beatster-server/controllers"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gngeorgiev/beatstr-server/controllers"
 	"github.com/spf13/viper"
 )
 

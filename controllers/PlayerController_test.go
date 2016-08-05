@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"beatster-server/models"
 	"testing"
 
 	"fmt"
 
 	. "github.com/franela/goblin"
+	"github.com/gngeorgiev/beatstr-server/models"
 )
 
 func TestPlayerController(t *testing.T) {

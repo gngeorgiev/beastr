@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"beatster-server/clients"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gngeorgiev/beatstr-server/clients"
 )
 
 const (
