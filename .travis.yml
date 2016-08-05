@@ -18,4 +18,4 @@ script:
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - make push-docker
-  - ssh -i id_rsa $USER@$HOSTNAME "docker service update --image gngeorgiev/beatster-server:latest server"
+  - ssh -i id_rsa -o StrictHostKeyChecking=no $USER@$HOSTNAME "docker service update --image gngeorgiev/beatster-server:latest server"
