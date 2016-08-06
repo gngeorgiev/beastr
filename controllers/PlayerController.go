@@ -72,7 +72,7 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 		cacheKey := player.GetResolveCacheKey(id, provider)
 		cacheData(cacheKey, result, time.Duration(1)*time.Hour)
 
-		c.AbortWithStatus(http.StatusNotFound)
+		c.JSON(http.StatusOK, result)
 	}
 }
 

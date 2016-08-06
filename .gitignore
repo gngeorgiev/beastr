@@ -2,3 +2,4 @@ beatster-server
 id_rsa
 .glide
 .idea
+npm-debug.log
