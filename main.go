@@ -3,36 +3,57 @@ package main
 import (
 	"log"
 
+	"fmt"
+
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/gngeorgiev/beatstr-server/clients"
 	"github.com/gngeorgiev/beatstr-server/controllers"
 	"github.com/spf13/viper"
-	"net/http"
-	"fmt"
 )
+
+var version string
+var hostname string
 
 func initConfig() {
 	viper.SetDefault("redis_address", "localhost:6379")
 	viper.BindEnv("redis_address")
 }
 
-var version string
-
-func main() {
+func initVariables() {
 	if version == "" {
 		version = "development"
 	}
 
+	osHostname, err := os.Hostname()
+	if err != nil {
+		hostname = err.Error()
+	} else {
+		hostname = osHostname
+	}
+}
+
+func initLogging() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+}
+
+func initServices() {
+	clients.StartRedisConnection()
+}
+
+func main() {
+	initVariables()
+	initLogging()
 	initConfig()
+	initServices()
 
 	r := gin.Default()
 
-	r.Use(controllers.GetMiddleware()...)
+	mainController := controllers.MainController
 
-	r.GET("/status", func (c *gin.Context) {
-		c.JSON(http.StatusOK, map[string]interface{}{
-			"version": version,
-		})
-	})
+	r.Use(mainController.GetMiddleware()...)
+	r.GET("/status", mainController.StatusRouteHandler(version, hostname))
 
 	playerController := controllers.PlayerController
 	player := r.Group(playerController.GetPrefix())
@@ -50,6 +71,8 @@ func main() {
 	}
 
 	log.Println(fmt.Sprintf("Server version: \"%s\"", version))
+	log.Println(fmt.Sprintf("Server hostname: \"%s\"", hostname))
+	log.Println(fmt.Sprintf("Redis address: \"%s\"", viper.GetString("redis_address")))
 
 	log.Fatal(r.Run(":8085"))
 }

@@ -9,5 +9,6 @@ import:
   - googleapi/transport
   - youtube/v3
 - package: gopkg.in/redis.v4
+- package: github.com/cenk/backoff
 testImport:
 - package: github.com/franela/goblin

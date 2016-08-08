@@ -73,7 +73,7 @@ func (a *autocompleteController) AutocompleteRouteHandler() gin.HandlerFunc {
 		query := c.Query(ParamQuery)
 		autocompleteData, err := a.autocomplete(query)
 		if err != nil {
-			c.AbortWithError(http.StatusBadRequest, err)
+			c.JSON(http.StatusBadRequest, err)
 			return
 		}
 

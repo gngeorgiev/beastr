@@ -65,7 +65,7 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 		provider := c.Query(ParamProvider)
 		result, err := player.resolve(id, provider)
 		if err != nil {
-			c.AbortWithError(http.StatusBadRequest, err)
+			c.JSON(http.StatusBadRequest, err)
 			return
 		}
 
