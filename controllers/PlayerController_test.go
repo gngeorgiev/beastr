@@ -40,7 +40,7 @@ func TestPlayerController(t *testing.T) {
 
 		g.Describe("Search", func() {
 			g.It("Search chainsmokers", func() {
-				results := playerController.search("chainsmokers")
+				results, _ := playerController.search("chainsmokers")
 				youTube := results["YouTube"]
 				if err, ok := youTube.(string); ok {
 					g.Fail("There was an error while searching" + err)

@@ -16,6 +16,7 @@ import (
 )
 
 type playerController struct {
+	baseController
 }
 
 func newPlayerController() *playerController {
@@ -65,7 +66,7 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 		provider := c.Query(ParamProvider)
 		result, err := player.resolve(id, provider)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
+			player.sendError(c, http.StatusBadRequest, err)
 			return
 		}
 
@@ -76,8 +77,8 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 	}
 }
 
-func (p *playerController) search(q string) map[string]interface{} {
-	result := map[string]interface{}{}
+func (p *playerController) search(q string) (result map[string]interface{}, hasErrors bool) {
+	result = make(map[string]interface{})
 	registeredProviders := providers.GetProviders()
 
 	wg := sync.WaitGroup{}
@@ -87,6 +88,7 @@ func (p *playerController) search(q string) map[string]interface{} {
 			res, err := p.Search(q)
 			if err != nil {
 				result[p.GetName()] = err.Error()
+				hasErrors = true
 			} else {
 				result[p.GetName()] = res
 			}
@@ -97,7 +99,7 @@ func (p *playerController) search(q string) map[string]interface{} {
 
 	wg.Wait()
 
-	return result
+	return
 }
 
 func (p *playerController) SearchRouteHandler() gin.HandlerFunc {
@@ -109,10 +111,11 @@ func (p *playerController) SearchRouteHandler() gin.HandlerFunc {
 		}
 
 		q := c.Query(ParamQuery)
-		result := p.search(q)
-
-		cacheKey := p.GetSearchCacheKey(q)
-		cacheData(cacheKey, result, time.Duration(24)*time.Hour)
+		result, hasErrors := p.search(q)
+		if !hasErrors {
+			cacheKey := p.GetSearchCacheKey(q)
+			cacheData(cacheKey, result, time.Duration(24)*time.Hour)
+		}
 
 		c.JSON(http.StatusOK, result)
 	}

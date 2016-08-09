@@ -9,7 +9,7 @@ import (
 
 	"time"
 
-	"log"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +19,7 @@ const (
 )
 
 type autocompleteController struct {
+	baseController
 }
 
 func newAutocompleteController() *autocompleteController {
@@ -39,7 +40,14 @@ func (a *autocompleteController) GetCompleteCacheKey(query string) string {
 }
 
 func (a *autocompleteController) autocomplete(query string) ([]interface{}, error) {
-	autocompleteUrl := fmt.Sprintf(AutocompleteUrl, query)
+	if query == "" {
+		defaultResult := make([]interface{}, 2)
+		defaultResult[0] = query
+		defaultResult[1] = make([]interface{}, 0)
+		return defaultResult, nil
+	}
+
+	autocompleteUrl := fmt.Sprintf(AutocompleteUrl, url.QueryEscape(query))
 	resp, err := http.Get(autocompleteUrl)
 	if err != nil {
 		return nil, err
@@ -53,10 +61,7 @@ func (a *autocompleteController) autocomplete(query string) ([]interface{}, erro
 	var autocompleteData []interface{}
 	jsonErr := json.Unmarshal(body, &autocompleteData)
 	if jsonErr != nil {
-		log.Println(jsonErr)
-		autocompleteData = make([]interface{}, 2)
-		autocompleteData[0] = query
-		autocompleteData[1] = make([]interface{}, 0)
+		return nil, jsonErr
 	}
 
 	return autocompleteData, nil
@@ -73,7 +78,7 @@ func (a *autocompleteController) AutocompleteRouteHandler() gin.HandlerFunc {
 		query := c.Query(ParamQuery)
 		autocompleteData, err := a.autocomplete(query)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
+			a.sendError(c, http.StatusBadRequest, err)
 			return
 		}
 

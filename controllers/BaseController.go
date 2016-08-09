@@ -38,3 +38,13 @@ type BaseController interface {
 	GetPrefix() string
 	GetMiddleware() []gin.HandlerFunc
 }
+
+type baseController struct {
+}
+
+func (b *baseController) sendError(c *gin.Context, code int, err error) {
+	log.Println(err)
+	c.JSON(code, map[string]interface{}{
+		"error": err.Error(),
+	})
+}

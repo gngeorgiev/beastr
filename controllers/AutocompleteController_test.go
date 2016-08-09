@@ -3,6 +3,8 @@ package controllers
 import (
 	"testing"
 
+	"fmt"
+
 	. "github.com/franela/goblin"
 )
 
@@ -24,6 +26,13 @@ func TestAutocompleteController(t *testing.T) {
 				g.Assert(err == nil).IsTrue("Error during autocomplete")
 				g.Assert(res[0].(string) == "").IsTrue("Wrong autocomplete first result, should be empty")
 				g.Assert(len(res[1].([]interface{})) == 0).IsTrue("Wrong autocomplete results, should be empty")
+			})
+
+			g.It("Should autocomplete with spaces", func() {
+				res, err := AutocompleteController.autocomplete("hardwell spacem")
+				g.Assert(err == nil).IsTrue("Error during autocomplete")
+				c := res[1].([]interface{})[0].(string)
+				g.Assert(c == "hardwell spaceman").IsTrue(fmt.Sprintf("Wrong autocomplete %s", c))
 			})
 		})
 	})
