@@ -14,6 +14,7 @@ import (
 )
 
 type mainController struct {
+	baseController
 }
 
 func newMainController() *mainController {
@@ -48,7 +49,7 @@ func (m *mainController) GetMiddleware() []gin.HandlerFunc {
 		if cachedData != "" {
 			jsonErr := json.Unmarshal([]byte(cachedData), &result)
 			if jsonErr != nil {
-				c.JSON(http.StatusInternalServerError, jsonErr)
+				m.sendError(c, http.StatusInternalServerError, jsonErr)
 				return
 			}
 

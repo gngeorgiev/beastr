@@ -71,7 +71,7 @@ func (a *autocompleteController) AutocompleteRouteHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, has := c.Get("cache")
 		if has {
-			c.JSON(http.StatusOK, data)
+			a.sendJson(c, http.StatusOK, data)
 			return
 		}
 
@@ -85,6 +85,6 @@ func (a *autocompleteController) AutocompleteRouteHandler() gin.HandlerFunc {
 		cacheKey := a.GetCompleteCacheKey(query)
 		cacheData(cacheKey, autocompleteData, time.Duration(24)*time.Hour)
 
-		c.JSON(http.StatusOK, autocompleteData)
+		a.sendJson(c, http.StatusOK, autocompleteData)
 	}
 }

@@ -48,7 +48,17 @@ func main() {
 	initConfig()
 	initServices()
 
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
+	r.Use(func(c *gin.Context) {
+		gin.Logger()(c)
+
+		query := c.Request.URL.Query()
+
+		fmt.Println(fmt.Sprintf(`Query: %s,`,
+			query,
+		))
+	})
 
 	mainController := controllers.MainController
 

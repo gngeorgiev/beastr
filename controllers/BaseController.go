@@ -48,3 +48,8 @@ func (b *baseController) sendError(c *gin.Context, code int, err error) {
 		"error": err.Error(),
 	})
 }
+
+func (b *baseController) sendJson(c *gin.Context, code int, data interface{}) {
+	log.Println(data)
+	c.JSON(code, data)
+}

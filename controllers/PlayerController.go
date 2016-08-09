@@ -58,7 +58,7 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, has := c.Get("cache")
 		if has {
-			c.JSON(http.StatusOK, data)
+			player.sendJson(c, http.StatusOK, data)
 			return
 		}
 
@@ -73,7 +73,7 @@ func (player *playerController) ResolveRouteHandler() gin.HandlerFunc {
 		cacheKey := player.GetResolveCacheKey(id, provider)
 		cacheData(cacheKey, result, time.Duration(1)*time.Hour)
 
-		c.JSON(http.StatusOK, result)
+		player.sendJson(c, http.StatusOK, result)
 	}
 }
 
@@ -106,7 +106,7 @@ func (p *playerController) SearchRouteHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, has := c.Get("cache")
 		if has {
-			c.JSON(http.StatusOK, data)
+			p.sendJson(c, http.StatusOK, data)
 			return
 		}
 
@@ -117,6 +117,6 @@ func (p *playerController) SearchRouteHandler() gin.HandlerFunc {
 			cacheData(cacheKey, result, time.Duration(24)*time.Hour)
 		}
 
-		c.JSON(http.StatusOK, result)
+		p.sendJson(c, http.StatusOK, result)
 	}
 }
