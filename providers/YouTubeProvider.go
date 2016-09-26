@@ -9,7 +9,7 @@ import (
 
 	"errors"
 
-	"github.com/gngeorgiev/beatstr-server/models"
+	"github.com/gngeorgiev/beatster-server/models"
 	"github.com/otium/ytdl"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
@@ -58,7 +58,7 @@ func (y *YouTubeProvider) getSpecificResults(kind string, items []*youtube.Searc
 }
 
 func (y *YouTubeProvider) Search(q string) ([]models.Track, error) {
-	call := y.service.Search.List("id,snippet").Q(q).MaxResults(25)
+	call := y.service.Search.List("id,snippet").Q(q).SafeSearch("none").MaxResults(25)
 	r, err := call.Do()
 	if err != nil {
 		return nil, err

@@ -10,8 +10,8 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gngeorgiev/beatstr-server/models"
-	"github.com/gngeorgiev/beatstr-server/providers"
+	"github.com/gngeorgiev/beatster-server/models"
+	"github.com/gngeorgiev/beatster-server/providers"
 	"github.com/go-errors/errors"
 )
 

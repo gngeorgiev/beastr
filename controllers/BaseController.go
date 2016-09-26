@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gngeorgiev/beatstr-server/clients"
+	"github.com/gngeorgiev/beatster-server/clients"
 )
 
 const (

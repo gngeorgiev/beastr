@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	. "github.com/franela/goblin"
-	"github.com/gngeorgiev/beatstr-server/models"
+	"github.com/gngeorgiev/beatster-server/models"
 )
 
 func TestPlayerController(t *testing.T) {
