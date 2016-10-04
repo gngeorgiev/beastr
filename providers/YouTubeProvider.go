@@ -137,7 +137,7 @@ func (y *YouTubeProvider) getStreamUrl(id string) (string, error) {
 }
 
 func (y *YouTubeProvider) getNextVideo(id string) (string, error) {
-	res, err := y.GetService().Search.List("id").Type("video").RelatedToVideoId(id).Do()
+	res, err := y.GetService().Search.List("id").Type("video").SafeSearch("none").RelatedToVideoId(id).Do()
 	if err != nil {
 		return "", err
 	}
